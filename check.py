@@ -13,6 +13,7 @@ import re
 import sys
 from datetime import datetime, timezone
 from pathlib import Path
+from zoneinfo import ZoneInfo
 
 from bs4 import BeautifulSoup
 from playwright.async_api import async_playwright
@@ -35,6 +36,7 @@ logger = logging.getLogger(__name__)
 STATUS_FILE = Path("docs/status.json")
 DEBUG_DIR = Path("debug")
 MAX_RETRIES = 3
+LOCAL_TZ = ZoneInfo("Europe/Sofia")
 
 
 def _read_status() -> dict:
@@ -47,9 +49,11 @@ def _read_status() -> dict:
 
 
 def _write_status(fields: dict, ready_count: int | None, last_notified_count, error: str | None) -> None:
-    now = datetime.now(timezone.utc)
+    now_utc = datetime.now(timezone.utc)
+    now_local = now_utc.astimezone(LOCAL_TZ)
     data = {
-        "timestamp": now.strftime("%Y-%m-%d %H:%M UTC"),
+        "timestamp": now_local.strftime("%Y-%m-%d %H:%M"),
+        "timestamp_utc": now_utc.isoformat(),
         "reg_number": REG_NUMBER,
         "ready_documents": ready_count,
         "status": fields.get("Статус"),

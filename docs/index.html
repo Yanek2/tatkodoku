@@ -64,8 +64,8 @@ async function refresh() {
     }
 
     const staleBanner = document.getElementById('staleBanner');
-    if (data.timestamp) {
-      const age = (Date.now() - new Date(data.timestamp.replace(' UTC', 'Z').replace(' ', 'T'))) / 1000;
+    if (data.timestamp_utc) {
+      const age = (Date.now() - new Date(data.timestamp_utc)) / 1000;
       staleBanner.style.display = age > 7200 ? 'block' : 'none';
     }
   } catch (e) {
