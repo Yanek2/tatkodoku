@@ -66,7 +66,7 @@ jobs:
           git add docs/status.json
           git diff --staged --quiet && echo "No change" && exit 0
           git commit -m "status update"
-          git pull --rebase origin master || (
+          git pull --rebase origin main || (
             git checkout --theirs -- docs/status.json &&
             git add docs/status.json &&
             git rebase --continue
