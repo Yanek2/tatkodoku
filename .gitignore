@@ -1,0 +1,22 @@
+venv/
+__pycache__/
+*.pyc
+debug/
+.env
+
+# local debugging artifacts from initial site investigation
+raw_page.html
+page2.html
+page3.html
+resp.html
+resp2.html
+resp_headers.txt
+headers.txt
+verbose.txt
+cookies.txt
+cookies2.txt
+test_check.py
+test_before.png
+test_after.png
+test_result.html
+test_result.png

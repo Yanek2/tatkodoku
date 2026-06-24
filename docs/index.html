@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Татко Докуу</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#0f1117;color:#e0e0e0;padding:24px}
+h1{font-size:1.3rem;font-weight:600;color:#fff;margin-bottom:6px}
+.sub{color:#888;font-size:.85rem;margin-bottom:18px}
+.banner{padding:10px 16px;border-radius:8px;margin-bottom:14px;font-size:.88rem;display:none}
+.warn{background:#7f4f00;color:#ffe08a}
+.err{background:#4a0000;color:#ff9a9a;font-family:monospace;font-size:.82rem}
+.cards{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:22px}
+.card{background:#1a1d27;border-radius:10px;padding:18px 22px;flex:1;min-width:200px}
+.cl{font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;color:#888;margin-bottom:6px}
+.ready{font-size:2.2rem;font-weight:700}
+.big{font-size:1.4rem;font-weight:600;color:#fff}
+.sm{font-size:.95rem;color:#ccc}
+.foot{margin-top:12px;font-size:.72rem;color:#555;text-align:right}
+</style>
+</head>
+<body>
+<h1>Татко Докуу — Проверка на статус</h1>
+<div class="sub" id="regnum">Вх. №: —</div>
+<div class="banner warn" id="staleBanner">⚠ Последна проверка преди повече от 2 часа — проверката може да не работи</div>
+<div class="banner err" id="errorBanner"></div>
+<div class="cards">
+  <div class="card"><div class="cl">Готови документи</div><div class="ready" id="ready">—</div></div>
+  <div class="card"><div class="cl">Статус</div><div class="big" id="status">—</div></div>
+  <div class="card"><div class="cl">Служба</div><div class="sm" id="office">—</div></div>
+  <div class="card"><div class="cl">Текущ етап</div><div class="sm" id="stage">—</div></div>
+  <div class="card"><div class="cl">Регистрирано на</div><div class="sm" id="registered">—</div></div>
+  <div class="card"><div class="cl">Плащане</div><div class="sm" id="payment">—</div></div>
+</div>
+<div class="foot" id="lastcheck">Последна проверка: —</div>
+
+<script>
+async function refresh() {
+  try {
+    const res = await fetch('status.json?_=' + Date.now());
+    const data = await res.json();
+
+    document.getElementById('regnum').textContent = 'Вх. №: ' + (data.reg_number || '—');
+    document.getElementById('status').textContent = data.status || '—';
+    document.getElementById('office').textContent = data.office || '—';
+    document.getElementById('stage').textContent = data.stage || '—';
+    document.getElementById('registered').textContent = data.registered_on || '—';
+    document.getElementById('payment').textContent = data.payment_status || '—';
+    document.getElementById('lastcheck').textContent = 'Последна проверка: ' + (data.timestamp || '—');
+
+    const ready = data.ready_documents;
+    const readyEl = document.getElementById('ready');
+    readyEl.textContent = ready === null || ready === undefined ? '—' : ready + ' бр.';
+    readyEl.style.color = ready > 0 ? '#e74c3c' : '#2ecc71';
+
+    const errBanner = document.getElementById('errorBanner');
+    if (data.error) {
+      errBanner.textContent = 'Грешка: ' + data.error;
+      errBanner.style.display = 'block';
+    } else {
+      errBanner.style.display = 'none';
+    }
+
+    const staleBanner = document.getElementById('staleBanner');
+    if (data.timestamp) {
+      const age = (Date.now() - new Date(data.timestamp.replace(' UTC', 'Z').replace(' ', 'T'))) / 1000;
+      staleBanner.style.display = age > 7200 ? 'block' : 'none';
+    }
+  } catch (e) {
+    document.getElementById('lastcheck').textContent = 'Грешка при зареждане на статус: ' + e;
+  }
+}
+
+refresh();
+setInterval(refresh, 60000);
+</script>
+</body>
+</html>
