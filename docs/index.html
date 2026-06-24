@@ -33,8 +33,8 @@ h1{font-size:1.3rem;font-weight:600;color:#fff;margin-bottom:6px}
   <div class="card"><div class="cl">Текущ етап</div><div class="sm" id="stage">—</div></div>
   <div class="card"><div class="cl">Регистрирано на</div><div class="sm" id="registered">—</div></div>
   <div class="card"><div class="cl">Плащане</div><div class="sm" id="payment">—</div></div>
+  <div class="card"><div class="cl">Последна проверка</div><div class="sm" id="lastcheck">—</div></div>
 </div>
-<div class="foot" id="lastcheck">Последна проверка: —</div>
 
 <script>
 async function refresh() {
@@ -48,7 +48,7 @@ async function refresh() {
     document.getElementById('stage').textContent = data.stage || '—';
     document.getElementById('registered').textContent = data.registered_on || '—';
     document.getElementById('payment').textContent = data.payment_status || '—';
-    document.getElementById('lastcheck').textContent = 'Последна проверка: ' + (data.timestamp || '—');
+    document.getElementById('lastcheck').textContent = data.timestamp || '—';
 
     const ready = data.ready_documents;
     const readyEl = document.getElementById('ready');
@@ -69,7 +69,7 @@ async function refresh() {
       staleBanner.style.display = age > 7200 ? 'block' : 'none';
     }
   } catch (e) {
-    document.getElementById('lastcheck').textContent = 'Грешка при зареждане на статус: ' + e;
+    document.getElementById('lastcheck').textContent = 'грешка: ' + e;
   }
 }
 
