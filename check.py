@@ -89,18 +89,22 @@ def _parse_result(html: str) -> dict:
 async def _fetch_result_html() -> str:
     async with Stealth().use_async(async_playwright()) as p:
         browser = await p.chromium.launch(headless=HEADLESS)
+        page = None
         try:
             page = await browser.new_page()
             await page.goto(KAIS_URL, wait_until="networkidle")
             target_id = await page.get_attribute("form.checkform", "data-ajax-update")
+            if target_id is None:
+                raise RuntimeError("data-ajax-update attribute not found on form.checkform — page structure may have changed")
             target_selector = f'[id="{target_id.lstrip("#")}"]'
             await page.fill('input[name="RegNumber"]', REG_NUMBER)
             await page.click('form.checkform button[type="submit"]')
-            await page.wait_for_timeout(5000)
+            await page.wait_for_selector(".doc-row, .no-results", timeout=15000)
             return await page.inner_html(target_selector)
         except Exception:
-            DEBUG_DIR.mkdir(exist_ok=True)
-            await page.screenshot(path=str(DEBUG_DIR / "error.png"), full_page=True)
+            if page is not None:
+                DEBUG_DIR.mkdir(exist_ok=True)
+                await page.screenshot(path=str(DEBUG_DIR / "error.png"), full_page=True)
             raise
         finally:
             await browser.close()
