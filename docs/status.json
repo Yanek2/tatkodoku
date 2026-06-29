@@ -1,13 +1,13 @@
 {
-  "timestamp": "2026-06-29 12:57",
-  "timestamp_utc": "2026-06-29T09:57:04.558840+00:00",
+  "timestamp": "2026-06-29 17:18",
+  "timestamp_utc": "2026-06-29T14:18:15.436803+00:00",
   "reg_number": "01-332521-13.05.2026",
   "ready_documents": 0,
-  "status": "Разпределен",
-  "registered_on": "13.05.2026 г. 9:22",
-  "payment_status": "Безплатен",
-  "office": "СОФИЯ",
-  "stage": "48 Избор на работен процес",
+  "status": null,
+  "registered_on": null,
+  "payment_status": null,
+  "office": null,
+  "stage": null,
   "last_notified_count": null,
-  "error": null
+  "error": "Stealth.async_hooked_method: Executable doesn't exist at /home/runner/.cache/ms-playwright/chromium_headless_shell-1228/chrome-headless-shell-linux64/chrome-headless-shell\n╔════════════════════════════════════════════════════════════╗\n║ Looks like Playwright was just installed or updated.       ║\n║ Please run the following command to download new browsers: ║\n║                                                            ║\n║     playwright install                                     ║\n║                                                            ║\n║ <3 Playwright Team                                         ║\n╚════════════════════════════════════════════════════════════╝"
 }
